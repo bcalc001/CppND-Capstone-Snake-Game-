@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "snake.h"
 #include "mongoose.h"
+#include <vector>
 
 class Game {
  public:
@@ -18,7 +19,7 @@ class Game {
   int GetBites() const;
  private:
   Snake snake;
-  Mongoose mongoose;
+  std::vector<Mongoose> mongoose;
   SDL_Point food;
 
   std::random_device dev;

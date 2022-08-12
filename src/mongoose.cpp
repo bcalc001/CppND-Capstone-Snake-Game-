@@ -3,7 +3,7 @@
 #include <iostream>
 
 bool Mongoose::BiteSnake() {
- return (bitecount++ == 2?false:true);
+ return (++bitecount == 3?false:true);
   
 }
 

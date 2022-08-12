@@ -7,13 +7,17 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
       mongoose(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_h(0, static_cast<int>(grid_height - 1)),
+      bites(0) {
+  std::cout<<"Game() - constructor"<<std::endl;   //debug
+  mongoose.push_back(Mongoose);
   PlaceFood();
   PlaceMongoose();
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
+  std::cout<<"Run()"<<std::endl;
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
@@ -49,10 +53,15 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     if (frame_duration < target_frame_duration) {
       SDL_Delay(target_frame_duration - frame_duration);
     }
+     
+    if (!snake.alive){
+      std::cout<<"Your Snake has died. Game Over!"<<std::endl;
+      return;}
   }
 }
 
 void Game::PlaceFood() {
+  std::cout<<"PlaceFood()"<<std::endl;
   int x, y;
   while (true) {
     x = random_w(engine);
@@ -68,20 +77,25 @@ void Game::PlaceFood() {
 }
 
 void Game::PlaceMongoose() {
+  std::cout<<"PlaceMongoose()"<<std::endl;
   int x, y;
   while (true) {
+    for (auto mg : mongoose){
     x = random_w(engine);
     y = random_h(engine);
     // Check that the location is not occupied by a snake or food item before placing
     // mongoose.
-    if (!snake.SnakeCell(x, y) && !x==food.x && !y==food.y) {
-      mongoose.Burrough(x,y);
+    if (!snake.SnakeCell(x, y) && x!=food.x && y!=food.y) {
+      mg.Burrough(x,y);
       return;
     }
+    }
+    
   }
 }
 
 void Game::Update() {
+  std::cout<<"Update()"<<std::endl;
   if (!snake.alive) return;
 
   snake.Update();
@@ -103,7 +117,7 @@ void Game::Update() {
   // Check if the mongoose has bitten the snake. If it's bitten twice , snake dies!
   if (snake.SnakeCell(mongoose.mgx, mongoose.mgy))
     {
-      mongoose.BiteSnake();
+      snake.alive = mongoose.BiteSnake();
       bites = mongoose.GetBiteCount();
      if(snake.alive){PlaceMongoose();}
     }
