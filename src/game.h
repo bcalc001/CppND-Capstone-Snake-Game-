@@ -29,7 +29,8 @@ class Game {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
-  
+  int grid_width;
+  int grid_height;
 
   void PlaceFood();
   void PlaceMongoose();
