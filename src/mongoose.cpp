@@ -2,9 +2,11 @@
 #include <cmath>
 #include <iostream>
 
-bool Mongoose::BiteSnake() {
- return (++bitecount == 3?false:true);
-  
+
+
+
+void Mongoose::BiteSnake(Snake &snake) {
+   snake.SetBites();  
 }
 
 void Mongoose::Burrough(int x, int y){
@@ -12,4 +14,3 @@ void Mongoose::Burrough(int x, int y){
   mgy = y;
 }
 
-int Mongoose::GetBiteCount(){return bitecount;}

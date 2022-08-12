@@ -3,16 +3,15 @@
 #include "SDL.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
-      mongoose(grid_width, grid_height),
+    : snake(grid_width, grid_height),      
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)),
-      bites(0) {
+      random_h(0, static_cast<int>(grid_height - 1)) {
   std::cout<<"Game() - constructor"<<std::endl;   //debug
-  mongoose.push_back(Mongoose);
+  mongoose.push_back(Mongoose(grid_width, grid_height));
   PlaceFood();
   PlaceMongoose();
+  std::cout<<"mongoose count: "<<mongoose.size()<<std::endl;
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -42,7 +41,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count, bites);
+      renderer.UpdateWindowTitle(score, frame_count, snake.GetBites());
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -85,10 +84,10 @@ void Game::PlaceMongoose() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake or food item before placing
     // mongoose.
-    if (!snake.SnakeCell(x, y) && x!=food.x && y!=food.y) {
-      mg.Burrough(x,y);
-      return;
-    }
+      if (!snake.SnakeCell(x, y) && x!=food.x && y!=food.y) {
+        mg.Burrough(x,y);
+        return;
+        }
     }
     
   }
@@ -103,26 +102,28 @@ void Game::Update() {
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
 
-  // Check if there's food over here. If snake eats food, reset new food and new mongoose burrough
+  // Check if there's food over here. If snake eats food, reset new food 
   if (food.x == new_x && food.y == new_y) {
     score++;
     PlaceFood();
-    PlaceMongoose();
+   
 
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.speed += 0.02;
   }
 
-  // Check if the mongoose has bitten the snake. If it's bitten twice , snake dies!
-  if (snake.SnakeCell(mongoose.mgx, mongoose.mgy))
+  // Check if the mongoose has bitten the snake. If it's bitten three times , snake dies!
+   for (auto mg : mongoose){
+     if (snake.SnakeCell(mg.mgx, mg.mgy))
     {
-      snake.alive = mongoose.BiteSnake();
-      bites = mongoose.GetBiteCount();
+      mg.BiteSnake(snake);
+      if(snake.GetBites() == 3){snake.alive=false;}
      if(snake.alive){PlaceMongoose();}
     }
+   }
 }
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
-int Game::GetBites() const { return bites; }
+int Game::GetBites() {return snake.GetBites();}
