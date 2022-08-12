@@ -77,3 +77,5 @@ bool Snake::SnakeCell(int x, int y) {
   }
   return false;
 }
+int Snake::GetBites() const { return bites; }
+void Snake::SetBites() {++bites;}

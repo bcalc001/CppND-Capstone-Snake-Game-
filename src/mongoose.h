@@ -1,22 +1,19 @@
 #ifndef MONGOOSE_H
 #define MONGOOSE_H
-
 #include <vector>
 #include "SDL.h"
-
+#include "snake.h"
 class Mongoose {
  public:
   
 
   Mongoose(int grid_width, int grid_height)
       : grid_width(grid_width),
-        grid_height(grid_height),
-        bitecount(0){}
+        grid_height(grid_height)
+        {}
 
-  bool BiteSnake();  
+  void BiteSnake(Snake &snake);  
   void Burrough(int x, int y);
-  int GetBiteCount();
-
   float speed{0.1f};
   
   
@@ -24,10 +21,9 @@ class Mongoose {
   int mgy;
 
  private:
-  //void UpdateMongoose();
   int grid_width;
   int grid_height;
-  int bitecount;  
+    
 };
 
 #endif
