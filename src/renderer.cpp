@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, std::vector<Mongoose> const mongoose) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, std::vector<Mongoose>  mongoose) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -54,13 +54,14 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, std::vector<Mong
   SDL_RenderFillRect(sdl_renderer, &block);
 
    // Render mongoose(s)
-  for (auto mg : mongoose){
+  for (auto mg = mongoose.begin(); mg<= mongoose.end(); mg++){
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-    block.x = mg.mgx * block.w;
-    block.y = mg.mgy * block.h;
+    block.x = (*mg).mgx * block.w;
+    block.y = (*mg).mgy * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
-    std::cout<<"Mongoose rendered"<<std::endl;
+    //std::cout<<"Mongoose rendered"<<std::endl;    
   }
+  //std::cout<<"Size mg: "<<mongoose.size();
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   for (SDL_Point const &point : snake.body) {
