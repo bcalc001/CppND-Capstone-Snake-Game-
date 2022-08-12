@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Mongoose const mongoose) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -51,6 +51,12 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
   block.x = food.x * block.w;
   block.y = food.y * block.h;
+  SDL_RenderFillRect(sdl_renderer, &block);
+
+   // Render mongoose
+  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
+  block.x = mongoose.mgx * block.w;
+  block.y = mongoose.mgy * block.h;
   SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's body
@@ -75,7 +81,8 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::UpdateWindowTitle(int score, int fps) {
-  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+void Renderer::UpdateWindowTitle(int score, int fps, int bites) {
+  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps) + 
+                    "# Bite-Wounds: " + std::to_string(bites)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

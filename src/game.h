@@ -6,6 +6,7 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "mongoose.h"
 
 class Game {
  public:
@@ -14,9 +15,10 @@ class Game {
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
-
+  int GetBites() const;
  private:
   Snake snake;
+  Mongoose mongoose;
   SDL_Point food;
 
   std::random_device dev;
@@ -25,8 +27,10 @@ class Game {
   std::uniform_int_distribution<int> random_h;
 
   int score{0};
+  int bites;
 
   void PlaceFood();
+  void PlaceMongoose();
   void Update();
 };
 
