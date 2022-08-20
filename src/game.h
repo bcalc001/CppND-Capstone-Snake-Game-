@@ -15,15 +15,15 @@ class Game {
   Game(std::size_t grid_width, std::size_t grid_height);
   void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
-  int GetScore() const;
-  int GetSize() const;
-  int GetBites();
-  int GetLives(); 
+  int GetScore(int player) const;
+  int GetSize(int player) const;
+  int GetBites(int player);
+  int GetLives(int player); 
   void SetFoodType();
   bool GetFoodType();
 
  private:
-  Snake snake;
+  std::vector<Snake> snake;
   std::vector<Mongoose> mongoose;
   SDL_Point food;
 
@@ -33,11 +33,11 @@ class Game {
   std::uniform_int_distribution<int> random_h;
   std::uniform_real_distribution<double> random_food;
 
-  int score{0};
+  
   int grid_width;
   int grid_height;
   bool rotten_food = false;
-  
+  int score[2] = {0,0};
   void PlaceFood();
   void PlaceMongoose();
   void Update();

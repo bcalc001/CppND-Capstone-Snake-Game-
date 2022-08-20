@@ -7,10 +7,8 @@ class Mongoose {
  public:
   
 
-  Mongoose(int grid_width, int grid_height)
-      : grid_width(grid_width),
-        grid_height(grid_height)
-        {}
+  Mongoose(int grid_width, int grid_height);
+  ~Mongoose();
 
   void BiteSnake(Snake &snake);  
   void Burrough(int x, int y);
