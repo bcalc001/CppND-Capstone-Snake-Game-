@@ -19,5 +19,6 @@ int main() {
   std::cout << "Score: " << game.GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";
   std::cout << "# Bite-wounds: " << game.GetBites() << "\n";
+  std::cout << "# Lives: " << game.GetLives() << "\n";
   return 0;
 }

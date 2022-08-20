@@ -16,8 +16,10 @@ class Snake {
 
   void Update();
   int GetBites() const;
+  int GetLives() const;
   void SetBites();
   void GrowBody();
+  void RunFromBadFood();
   bool SnakeCell(int x, int y);
 
   Direction direction = Direction::kUp;
@@ -30,9 +32,10 @@ class Snake {
   std::vector<SDL_Point> body;
 
  private:
-  void UpdateHead();
+  void UpdateHead(int fwd_rev);
   void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
   int bites{0};
+  int lives{3};
   bool growing{false};
   int grid_width;
   int grid_height;

@@ -7,7 +7,7 @@ void Snake::Update() {
       static_cast<int>(head_x),
       static_cast<int>(
           head_y)};  // We first capture the head's cell before updating.
-  UpdateHead();
+  UpdateHead(1);
   SDL_Point current_cell{
       static_cast<int>(head_x),
       static_cast<int>(head_y)};  // Capture the head's cell after updating.
@@ -19,22 +19,22 @@ void Snake::Update() {
   }
 }
 
-void Snake::UpdateHead() {
+void Snake::UpdateHead(int fwd_rev) {
   switch (direction) {
     case Direction::kUp:
-      head_y -= speed;
+      head_y = head_y - speed*fwd_rev;
       break;
 
     case Direction::kDown:
-      head_y += speed;
+      head_y = head_y + speed*fwd_rev;
       break;
 
     case Direction::kLeft:
-      head_x -= speed;
+      head_x = head_x - speed*fwd_rev;
       break;
 
     case Direction::kRight:
-      head_x += speed;
+      head_x = head_x + speed*fwd_rev;
       break;
   }
 
@@ -78,4 +78,15 @@ bool Snake::SnakeCell(int x, int y) {
   return false;
 }
 int Snake::GetBites() const { return bites; }
-void Snake::SetBites() {++bites;}
+int Snake::GetLives() const {return lives;}
+void Snake::SetBites() 
+  { ++bites; 
+    if(bites==3)
+      {
+        --lives;
+        bites = 0;       
+
+       }
+    if(lives == 0){alive = false;}
+  }
+void Snake::RunFromBadFood(){UpdateHead(-1);}
