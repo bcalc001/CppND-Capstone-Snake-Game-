@@ -8,6 +8,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)),
+      random_food(0, 1.0),
       grid_width(grid_width),
       grid_height(grid_height) {
   std::cout<<"Game() - constructor"<<std::endl;   //debug
@@ -44,7 +45,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count, snake.GetBites());
+      renderer.UpdateWindowTitle(score, frame_count, snake.GetBites(), snake.GetLives());
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -68,6 +69,7 @@ void Game::PlaceFood() {
   while (true) {
     x = random_w(engine);
     y = random_h(engine);
+    SetFoodType();
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
@@ -110,13 +112,17 @@ void Game::Update() {
   int new_y = static_cast<int>(snake.head_y);
 
   // Check if there's food over here. If snake eats food, reset new food 
-  if (food.x == new_x && food.y == new_y) {
-    score++;
-    PlaceFood();
-    if (score%3 ==0) {
-      mongoose.push_back(Mongoose(grid_width, grid_height));
-      PlaceMongoose();
-      }
+  if (food.x == new_x && food.y == new_y )
+  {
+    if(GetFoodType()){score++;}    //Good food?
+    if (!GetFoodType()){snake.RunFromBadFood();} //bad food?
+     PlaceFood();
+      if (score%3 ==0) 
+        {
+          mongoose.push_back(Mongoose(grid_width, grid_height));
+          PlaceMongoose();
+        }
+    
      //std::cout<<"mongoose count: "<<mongoose.size()<<std::endl;
 
 
@@ -131,7 +137,7 @@ void Game::Update() {
      if (snake.SnakeCell((*mg).mgx, (*mg).mgy))
     {
       (*mg).BiteSnake(snake);
-      if(snake.GetBites() == 3){snake.alive=false;}
+      if(snake.GetLives() == 0){snake.alive=false;}
      if(snake.alive){PlaceMongoose();}
     }
    }
@@ -140,3 +146,11 @@ void Game::Update() {
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
 int Game::GetBites() {return snake.GetBites();}
+int Game::GetLives() {return snake.GetLives();}
+void Game::SetFoodType()
+  {
+    double foodtype = random_food(engine);
+    rotten_food = (foodtype > 0.50)? true:false;
+  } //good food=true
+
+bool Game::GetFoodType(){return rotten_food;}

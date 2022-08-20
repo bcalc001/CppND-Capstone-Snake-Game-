@@ -61,9 +61,27 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, std::vector<Mong
     SDL_RenderFillRect(sdl_renderer, &block);
     //std::cout<<"Mongoose rendered"<<std::endl;    
   }
-  //std::cout<<"Size mg: "<<mongoose.size();
+
   // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  switch (snake.GetBites())
+  {
+    case 0:
+      SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+      break;
+    case 1:
+      SDL_SetRenderDrawColor(sdl_renderer, 0xCC, 0xCC, 0xCC, 0xFF);
+      break;
+    case 2:
+      SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
+      break;
+    case 3:
+      SDL_SetRenderDrawColor(sdl_renderer,0xFF, 0x00, 0x00, 0xFF);
+    break;
+    
+    default:
+      break;
+  }
+  
   for (SDL_Point const &point : snake.body) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
@@ -73,19 +91,36 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, std::vector<Mong
   // Render snake's head
   block.x = static_cast<int>(snake.head_x) * block.w;
   block.y = static_cast<int>(snake.head_y) * block.h;
-  if (snake.alive) {
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-  } else {
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-  }
+  if (snake.alive)
+  {
+    switch (snake.GetBites())
+    {
+    case 0:
+      SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    break;
+    case 1:
+      SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0x7A, 0xFF);
+    break;
+    case 2:
+      SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x75, 0x75, 0xFF);
+    break;
+    case 3:
+      SDL_SetRenderDrawColor(sdl_renderer,0xFF, 0x00, 0x00, 0xFF);
+    break;
+    
+    default:
+      break;
+    }
+  } 
   SDL_RenderFillRect(sdl_renderer, &block);
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::UpdateWindowTitle(int score, int fps, int bites) {
+void Renderer::UpdateWindowTitle(int score, int fps, int bites, int lives) {
   std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps) + 
-                    "# Bite-Wounds: " + std::to_string(bites)};
+                    "# Bite-Wounds: " + std::to_string(bites) 
+                    + "# Lives: " + std::to_string(lives)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

@@ -14,7 +14,7 @@ class Renderer {
 
   void Render(Snake const snake, SDL_Point const &food, std::vector<Mongoose> const mongoose);
 
-  void UpdateWindowTitle(int score, int fps, int bites);
+  void UpdateWindowTitle(int score, int fps, int bites, int lives);
 
  private:
   SDL_Window *sdl_window;

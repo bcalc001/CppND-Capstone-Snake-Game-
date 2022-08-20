@@ -5,7 +5,18 @@ This game is extended from the snake game version supplied in the starter reposi
 
 <img src="snake_game.gif"/>
 
-The Capstone Project I have extended the snake game to include a hazard in the form of a natural snake predator called a mongoose which the player must deftly avoid contacting as they manuver the snake to find food. As the snake increases in size and speed the difficulty in avoiding the mongoose increases. Each time the player scores an additional 3 points, a new mongoose is added. The mongoose is assumed to pop up out of its underground burrough at random locations every so often. If the snake and mongoose come into contact with each other by sharing a positional coordinate, the mongoose is assumed to attack the snake with a bite. The player's snake is allowed two bites before the snake is considered to lose its life. 
+The Capstone Project I have extended the snake game to include the following features:
+
+1- a hazard in the form of a natural snake predator called a mongoose which the player must deftly avoid contacting as they manuver the snake to find food. 
+
+2- Each time the player scores an additional 3 points, a new mongoose is added. 
+
+3- If the snake and mongoose come into contact with each other by sharing a positional coordinate, the mongoose is assumed to attack the snake with a bite. The player's snake is allowed two bites before the snake is considered to lose its life. 
+
+4- A life counter for snake/player has been added. The snake shall have 3 lives to use before game over
+
+5- Rotten food. If the snake consumes rotten food it forces the snake to reverse direcdtion immediately with increased speed.
+
 
 #Folder structure:   Note: build folder is not included in the repo. This is constructed by the user upon installation.
 CPP_Captston_Snake_Game
