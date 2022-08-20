@@ -1,7 +1,8 @@
 
 
 # CPPND: Capstone Snake Game : Bryan Calcagno
-This game is extended from the snake game version supplied in the starter repository at:  [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
+This game is extended from the snake game version supplied in the starter repository at:  [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
+The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
 <img src="snake_game.gif"/>
 
@@ -11,13 +12,18 @@ The Capstone Project I have extended the snake game to include the following fea
 
 2- Each time the player scores an additional 3 points, a new mongoose is added. 
 
-3- If the snake and mongoose come into contact with each other by sharing a positional coordinate, the mongoose is assumed to attack the snake with a bite. The player's snake is allowed two bites before the snake is considered to lose its life. 
+3- If the snake and mongoose come into contact with each other by sharing a positional coordinate, the mongoose is assumed to attack the snake with a bite. 
+   Bites are tracked by a bite variable in snake class. 
 
 4- A life counter for snake/player has been added. The snake shall have 3 lives to use before game over
 
-5- Rotten food. If the snake consumes rotten food it forces the snake to reverse direcdtion immediately with increased speed.
+5- A bite counter for snake/player has been added. The snake shall have 3 bites/health points before it dies.
 
+6- Rotten food. If the snake consumes rotten food it forces the snake to reverse direcdtion immediately with increased speed, adding to the challenge of game play.
 
+7- Player 2 functionality has been added. A second snake is available which uses keys awds for directionals. Snakes are stored in a snake vector control structure. iterators are used to cycle through
+ 	the snakes to update etc. 
+    
 #Folder structure:   Note: build folder is not included in the repo. This is constructed by the user upon installation.
 CPP_Captston_Snake_Game
   cmake
@@ -42,8 +48,8 @@ A variety of control structures are used in the project.
 New functions added= 
 game.h: 20
 game.h:36
-game.cpp:81
-game.cpp:142
+game.cpp:83
+game.cpp:146-156
 
 vector structure: 
 game.h:23
@@ -60,12 +66,17 @@ mongoose.cpp
 
 4- Classes use appropriate access specifiers for class members.
 All class data members are explicitly specified as public, protected, or private.
+Several new members added to the following classes:
 snake.h
 mongoose.h
+game.h
+
 
 5- Class constructors utilize member initialization lists.
 All class members that are set to argument values are initialized through member initialization lists.
-mongoose.h:10
+New init lists or items added to existing init lists:
+mongoose.cpp:6
+game.cpp:11
 
 6- The project makes use of references in function declarations.
 At least two variables are defined as references, or two functions use pass-by-reference in the project code.
