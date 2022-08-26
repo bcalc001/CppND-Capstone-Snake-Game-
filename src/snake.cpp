@@ -3,6 +3,8 @@
 #include <iostream>
 
 void Snake::Update() {
+    //std::cout<<"Snake::Update()"<<std::endl;
+
   SDL_Point prev_cell{
       static_cast<int>(head_x),
       static_cast<int>(
@@ -20,6 +22,8 @@ void Snake::Update() {
 }
 
 void Snake::UpdateHead(int fwd_rev) {
+   // std::cout<<"Sanke::UpdateHead()"<<std::endl;
+
   switch (direction) {
     case Direction::kUp:
       head_y = head_y - speed*fwd_rev;
@@ -44,6 +48,8 @@ void Snake::UpdateHead(int fwd_rev) {
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
+   // std::cout<<"Snake::UpdateBody()"<<std::endl;
+
   // Add previous head location to vector
   body.push_back(prev_head_cell);
 
@@ -89,4 +95,8 @@ void Snake::SetBites()
        }
     if(lives == 0){alive = false;}
   }
-void Snake::RunFromBadFood(){UpdateHead(-1);}
+void Snake::RunFromBadFood()
+{  
+  std::cout<<"Snake::RunFromBadFood()"<<std::endl;
+UpdateHead(-1);
+}

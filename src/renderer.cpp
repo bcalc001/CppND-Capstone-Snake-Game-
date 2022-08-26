@@ -38,7 +38,11 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(std::vector<Snake>  const  &snake, SDL_Point const &food, std::vector<Mongoose> const  &mongoose) {
+void Renderer::Render(std::vector<Snake>  const  &snake, 
+                      SDL_Point const &food, 
+                      std::vector<Mongoose> const  &mongoose) 
+{
+  std::cout<<"Render() started"<<std::endl;
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -54,18 +58,18 @@ void Renderer::Render(std::vector<Snake>  const  &snake, SDL_Point const &food, 
   SDL_RenderFillRect(sdl_renderer, &block);
 
    // Render mongoose(s)
-  for (auto mg = mongoose.begin(); mg<= mongoose.end(); mg++){
+  for (auto &mg : mongoose){
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-    block.x = (*mg).mgx * block.w;
-    block.y = (*mg).mgy * block.h;
+    block.x = mg.mgx * block.w;
+    block.y = mg.mgy * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
     //std::cout<<"Mongoose rendered"<<std::endl;    
   }
 
-for (auto snakes = snake.begin(); snakes <= snake.end(); snakes++)
+for (auto &snakes:snake)
     {
     // Render snake's body
-    switch ( (*snakes).GetBites())
+    switch ( snakes.GetBites())
     {
       case 0:
         SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -84,18 +88,18 @@ for (auto snakes = snake.begin(); snakes <= snake.end(); snakes++)
         break;
     }
     
-    for (SDL_Point const &point :  (*snakes).body) {
+    for (SDL_Point const &point :  snakes.body){
       block.x = point.x * block.w;
       block.y = point.y * block.h;
       SDL_RenderFillRect(sdl_renderer, &block);
     }
 
     // Render snake's head
-    block.x = static_cast<int>( (*snakes).head_x) * block.w;
-    block.y = static_cast<int>( (*snakes).head_y) * block.h;
-    if ( (*snakes).alive)
+    block.x = static_cast<int>(snakes.head_x) * block.w;
+    block.y = static_cast<int>(snakes.head_y) * block.h;
+    if ( snakes.alive)
     {
-      switch ( (*snakes).GetBites())
+      switch ( snakes.GetBites())
       {
       case 0:
         SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
@@ -119,6 +123,8 @@ for (auto snakes = snake.begin(); snakes <= snake.end(); snakes++)
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
+  std::cout<<"Render() completed"<<std::endl;
+
 }
 
 void Renderer::UpdateWindowTitle(int score[2],  std::vector<Snake> const &snake) {
