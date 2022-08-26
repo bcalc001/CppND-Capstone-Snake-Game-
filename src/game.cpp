@@ -93,7 +93,7 @@ void Game::PlaceMongoose() {
   int x, y;
   std::cout<<"mongoose count: "<<mongoose.size()<<std::endl;
   while (true) {
-    for (auto mg = mongoose.begin();mg <= mongoose.end(); mg++){
+    for (auto &mg : mongoose){
      
     x = random_w(engine);
     y = random_h(engine);
@@ -101,8 +101,8 @@ void Game::PlaceMongoose() {
     // Check that the location is not occupied by a snake or food item before placing
     // mongoose.
       if (!snake.front().SnakeCell(x, y) && !snake.back().SnakeCell(x, y) && x!=food.x && y!=food.y) {
-        (*mg).Burrough(x,y);
-         std::cout<<(*mg).mgx<<" "<<(*mg).mgy<<std::endl;
+        mg.Burrough(x,y);
+         std::cout<<mg.mgx<<" "<<mg.mgy<<std::endl;
         return;
         }
     }
@@ -113,47 +113,46 @@ void Game::PlaceMongoose() {
 void Game::Update() {
   //std::cout<<"Update()"<<std::endl;
   if (!snake.front().alive && !snake.back().alive) return;
-  int index = 0;
-  for (auto snakes = snake.begin(); snakes <= snake.end(); snakes++)
-    {
-    (*snakes).Update();
+  int index = 1;
+  //std::cout<<"Size of snake vector: "<<snake.size()<<std::endl;
+  for (auto &snakes : snake){
+    //std::cout<<"iteration for snake"<<index<<" started."<<std::endl;
 
-    int new_x = static_cast<int>((*snakes).head_x);
-    int new_y = static_cast<int>((*snakes).head_y);
-
+    snakes.Update(); 
+    int new_x = static_cast<int>(snakes.head_x);
+    int new_y = static_cast<int>(snakes.head_y);
     // Check if there's food over here. If snake eats food, reset new food 
     if (food.x == new_x && food.y == new_y )
     {
       if(GetFoodType()) {score[index]++;}     //Healthy food?
 
-      if (!GetFoodType()){(*snakes).RunFromBadFood();(*snakes).speed *= 2.0;} //bad food?
+      if (!GetFoodType()){snakes.RunFromBadFood();snakes.speed *= 2.0;} //bad food?
       PlaceFood();
         if (score[index]%3 ==0) 
           {
             mongoose.push_back(Mongoose(grid_width, grid_height));
             PlaceMongoose();
           }
-      
-      //std::cout<<"mongoose count: "<<mongoose.size()<<std::endl;
-
-
       // Grow snake and increase speed.
-      (*snakes).GrowBody();
-      (*snakes).speed += 0.02;
+      snakes.GrowBody();
+      snakes.speed += 0.02;
     }
 
     // Check if the mongoose has bitten the snake. If it's bitten three times , snake dies!
-   for (auto mg = mongoose.begin(); mg<= mongoose.end(); mg++){
+   for (auto &mg : mongoose){
     
-     if ((*snakes).SnakeCell((*mg).mgx, (*mg).mgy))
+     if (snakes.SnakeCell(mg.mgx, mg.mgy))
     {
-      (*mg).BiteSnake((*snakes));
-      if((*snakes).GetLives() == 0){(*snakes).alive=false;}
-     if((*snakes).alive){PlaceMongoose();}
+      mg.BiteSnake(snakes);
+      if(snakes.GetLives() == 0){snakes.alive=false;}
+      if(snakes.alive){PlaceMongoose();}
     }
    }
+  //std::cout<<"iteration for snake"<<index<<" completed."<<std::endl;
+
    index++;
   }
+  //std::cout<<"Update() completed"<<std::endl;
 }
 int Game::GetScore(int player) const { return score[player]; }
 int Game::GetSize(int player) const { return snake[player].size; }
@@ -165,4 +164,6 @@ void Game::SetFoodType()
     rotten_food = (foodtype > 0.50)? true:false;
   } //good food=true
 
-bool Game::GetFoodType(){return rotten_food;}
+bool Game::GetFoodType(){  
+  std::cout<<"GetFoodType()"<<std::endl;
+return rotten_food;}
