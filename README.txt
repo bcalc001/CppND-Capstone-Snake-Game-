@@ -21,7 +21,7 @@ The Capstone Project I have extended the snake game to include the following fea
 
 6- Rotten food. If the snake consumes rotten food it forces the snake to reverse direcdtion immediately with increased speed, adding to the challenge of game play.
 
-7- Player 2 functionality has been added. A second snake is available which uses keys awds for directionals. Snakes are stored in a snake vector control structure. iterators are used to cycle through
+7- Player 2 functionality has been added using threads/concurrency. A second snake is available which uses keys awds for directionals. Snakes are stored in a snake vector control structure. iterators are used to cycle through
  	the snakes to update etc. 
     
 #Folder structure:   Note: build folder is not included in the repo. This is constructed by the user upon installation.
@@ -83,6 +83,9 @@ At least two variables are defined as references, or two functions use pass-by-r
 mongoose.cpp:8
 renderer.cpp:54
 
+7- The project uses multithreading.
+The project uses multiple threads in the execution for including a second player. Each thread manages one player's controller.
+game.cpp:34-44
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
