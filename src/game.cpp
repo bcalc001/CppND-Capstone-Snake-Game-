@@ -13,30 +13,37 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
   {
 
       std::cout<<"Game() - constructor"<<std::endl;   //debug
-      snake.push_back(Snake(grid_width, grid_height)); //Snake player 1
-      snake.push_back(Snake(grid_width, grid_height)); //Snake player 2
+      
+      snake.push_back(Snake(grid_width, grid_height, -5, 0)); //Snake player 1
+      snake.push_back(Snake(grid_width, grid_height, -10, 1)); //Snake player 2
       mongoose.push_back(Mongoose(grid_width, grid_height));
       PlaceFood();
       PlaceMongoose();
   
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
+void Game::Run(Renderer &renderer,
                std::size_t target_frame_duration) {
   std::cout<<"Run()"<<std::endl;
+
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
-
+  Controller player_1_controller(SDLK_UP, SDLK_DOWN, SDLK_RIGHT, SDLK_LEFT);
+  Controller player_2_controller(SDLK_w, SDLK_s, SDLK_d, SDLK_a);
+  
   while (running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput1(running, snake.front());
-    controller.HandleInput2(running, snake.back());
+    std::thread player1Input(&Controller::HandleInput, player_1_controller, std::ref(running), std::ref(snake[0]));
+    std::thread player2Input(&Controller::HandleInput, player_2_controller, std::ref(running), std::ref(snake[1]));
+    player1Input.join();
+    player2Input.join();
+    
     Update();
     renderer.Render(snake, food, mongoose);
 
@@ -62,9 +69,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     }
      
     if (!snake.front().alive){
-      std::cout<<"Player 1 Snake has died!"<<std::endl;}
+      std::cout<<"Player 1 Snake has died!"<<std::endl;
+      snake.erase(snake.begin());}
     if (!snake.back().alive){
-      std::cout<<"Player 2 Snake has died!"<<std::endl;}
+      std::cout<<"Player 2 Snake has died!"<<std::endl;
+       snake.erase(snake.end());}
     if (!snake.front().alive && !snake.back().alive)
       {std::cout<< "No snakes left alive, Game Over!"<<std::endl;
       return;}
@@ -113,10 +122,8 @@ void Game::PlaceMongoose() {
 void Game::Update() {
   //std::cout<<"Update()"<<std::endl;
   if (!snake.front().alive && !snake.back().alive) return;
-  int index = 1;
-  //std::cout<<"Size of snake vector: "<<snake.size()<<std::endl;
+  int index = 0;
   for (auto &snakes : snake){
-    //std::cout<<"iteration for snake"<<index<<" started."<<std::endl;
 
     snakes.Update(); 
     int new_x = static_cast<int>(snakes.head_x);
@@ -126,7 +133,7 @@ void Game::Update() {
     {
       if(GetFoodType()) {score[index]++;}     //Healthy food?
 
-      if (!GetFoodType()){snakes.RunFromBadFood();snakes.speed *= 2.0;} //bad food?
+      if (!GetFoodType()){snakes.RunFromBadFood();snakes.speed *= 1.1;} //bad food?
       PlaceFood();
         if (score[index]%3 ==0) 
           {
@@ -148,7 +155,6 @@ void Game::Update() {
       if(snakes.alive){PlaceMongoose();}
     }
    }
-  //std::cout<<"iteration for snake"<<index<<" completed."<<std::endl;
 
    index++;
   }

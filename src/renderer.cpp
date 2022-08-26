@@ -42,7 +42,7 @@ void Renderer::Render(std::vector<Snake>  const  &snake,
                       SDL_Point const &food, 
                       std::vector<Mongoose> const  &mongoose) 
 {
-  std::cout<<"Render() started"<<std::endl;
+  //std::cout<<"Render() started"<<std::endl;
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -66,74 +66,67 @@ void Renderer::Render(std::vector<Snake>  const  &snake,
     //std::cout<<"Mongoose rendered"<<std::endl;    
   }
 
-for (auto &snakes:snake)
-    {
-    // Render snake's body
-    switch ( snakes.GetBites())
-    {
-      case 0:
-        SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        break;
-      case 1:
-        SDL_SetRenderDrawColor(sdl_renderer, 0xCC, 0xCC, 0xCC, 0xFF);
-        break;
-      case 2:
-        SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
-        break;
-      case 3:
-        SDL_SetRenderDrawColor(sdl_renderer,0xFF, 0x00, 0x00, 0xFF);
-      break;
-      
-      default:
-        break;
-    }
-    
-    for (SDL_Point const &point :  snakes.body){
-      block.x = point.x * block.w;
-      block.y = point.y * block.h;
-      SDL_RenderFillRect(sdl_renderer, &block);
-    }
+  //Render snakes
+  //std::cout<<"snake count: "<<snake.size()<<std::endl;
 
-    // Render snake's head
-    block.x = static_cast<int>(snakes.head_x) * block.w;
-    block.y = static_cast<int>(snakes.head_y) * block.h;
+  for (auto &snakes : snake){
+  
     if ( snakes.alive)
-    {
-      switch ( snakes.GetBites())
       {
-      case 0:
-        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-      break;
-      case 1:
-        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0x7A, 0xFF);
-      break;
-      case 2:
-        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x75, 0x75, 0xFF);
-      break;
-      case 3:
-        SDL_SetRenderDrawColor(sdl_renderer,0xFF, 0x00, 0x00, 0xFF);
-      break;
-      
-      default:
-        break;
-      }
-    } 
+          // Render snake's body. Draw it grey if snake is injured
+          switch ( snakes.GetBites())
+          {
+            case 0:
+              SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+              break;
+            case 1:
+              SDL_SetRenderDrawColor(sdl_renderer, 0xCC, 0xCC, 0xCC, 0xFF);
+              break;
+            case 2:
+              SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
+              break;
+            
+            default:
+              break;
+          }
+          
+          for (SDL_Point const &point :  snakes.body)
+          {
+            block.x = point.x * block.w;
+            block.y = point.y * block.h;
+            SDL_RenderFillRect(sdl_renderer, &block);
+          }
+
+          // Render snake's head
+          block.x = static_cast<int>(snakes.head_x) * block.w;
+          block.y = static_cast<int>(snakes.head_y) * block.h;
+                  
+          if(snakes.id==0){SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0xFF, 0xFF);} //player 1 violet
+          if(snakes.id==1){SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0xFF, 0xFF);} //player 2 blue
+          
+
+            SDL_RenderFillRect(sdl_renderer, &block);
+      } 
   }
-  SDL_RenderFillRect(sdl_renderer, &block);
+
+
+
+
+  
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
-  std::cout<<"Render() completed"<<std::endl;
+ // std::cout<<"Render() completed"<<std::endl;
 
 }
 
 void Renderer::UpdateWindowTitle(int score[2],  std::vector<Snake> const &snake) {
   std::string title{"P1 Score: " + std::to_string(score[0]) +  
-                    "P1_Bites: " + std::to_string(snake.front().GetBites()) +
-                    "P1_Lives: " + std::to_string(snake.front().GetLives()) +
+                    " P1_Bites: " + std::to_string(snake.front().GetBites()) +
+                    " P1_Lives: " + std::to_string(snake.front().GetLives()) +
                     "   " +
                     "P2 Score: " + std::to_string(score[1]) +  
-                    "P2_Bites: " + std::to_string(snake.back().GetBites()) +
-                    "P2_Lives: " + std::to_string(snake.back().GetLives())};
+                    " P2_Bites: " + std::to_string(snake.back().GetBites()) +
+                    " P2_Lives: " + std::to_string(snake.back().GetLives())};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }
