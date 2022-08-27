@@ -21,7 +21,7 @@ class Controller {
   SDL_Keycode _Down;
   SDL_Keycode _Right; 
   SDL_Keycode _Left;
-  
+ 
 };
 
 #endif
